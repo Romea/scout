@@ -1,0 +1,17 @@
+<library path="scout_hardware">
+  <class name="scout_hardware/ScoutMiniHardware"
+    type="romea::ros2::ScoutMiniHardware"
+    base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Hardware interface for scout mini robot
+    </description>
+  </class>
+
+  <class name="scout_hardware/ScoutV2Hardware"
+    type="romea::ros2::ScoutV2Hardware"
+    base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Hardware interface for scout v2 robot
+    </description>
+  </class>
+</library>

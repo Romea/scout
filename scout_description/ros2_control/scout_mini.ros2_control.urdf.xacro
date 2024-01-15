@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="scout_ros2_control_urdf" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="prefix" default="scout" />
+  <xacro:arg name="mode" default="simulation" />
+  <xacro:arg name="base_name" default="base" />
+
+
+  <xacro:include filename="$(find scout_description)/ros2_control/scout.ros2_control.xacro" />
+
+  <xacro:scout_ros2_control
+    model="mini"
+    mode="$(arg mode)"
+    prefix="$(arg prefix)"
+    base_name="$(arg base_name)" />
+
+</robot>
