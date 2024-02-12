@@ -82,7 +82,7 @@ def launch_setup(context, *args, **kwargs):
             )
         )
 
-        robot_description_file = "/tmp/robot_base_description.urdf"
+        robot_description_file = "/tmp/scout_description.urdf"
         with open(robot_description_file, "w") as f:
             f.write(robot_urdf_description)
 
