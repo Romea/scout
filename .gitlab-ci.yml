@@ -21,6 +21,9 @@ before_script:
   - set +e
   - vcs custom --git --args checkout ${CI_COMMIT_BRANCH}
   - set -e
+  - cd src/third_party/ugv_sdk
+  - git checkout romea
+  - cd ${CI_PROJECT_DIR}/workspace
 
 # galatic
 galactic_focal_build:
