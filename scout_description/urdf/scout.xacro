@@ -6,6 +6,8 @@
       <xacro:property name="M_PI" value="3.1415926535897931" />
 
       <xacro:include filename="$(find romea_mobile_base_description)/urdf/base4WD.chassis.xacro" />
+      <xacro:include filename="$(find scout_description)/urdf/visual/chassis.xacro" />
+      <xacro:include filename="$(find scout_description)/urdf/visual/wheels.xacro" />
 
       <xacro:property name="conf" value="$(find scout_description)/config/scout_${model}.yaml" />
       <xacro:property name="props" value="${load_yaml(conf)}" />
@@ -115,39 +117,11 @@
          value="${min(front_wheel_radius,rear_wheel_radius)}" />
 
       <xacro:chassis>
-         <!-- visual chassis -->
-         <xacro:if value="${model == 'mini'}">
-            <visual>
-               <origin
-                  xyz="${aabb_center_x-body_reference_x+0.02} ${aabb_center_y-0.015}  ${aabb_center_z-chassis_height-0.08}"
-                  rpy="0 0 ${-M_PI/2.}" />
-               <geometry>
-                  <mesh filename="package://scout_description/meshes/scout_mini_chassis.STL" />
-               </geometry>
-            </visual>
-         </xacro:if>
-         <xacro:if value="${model == 'v2'}">
-            <visual>
-               <origin
-                  xyz="${aabb_center_x-body_reference_x} ${aabb_center_y}  ${aabb_center_z-chassis_height}"
-                  rpy="0 0 0" />
-               <geometry>
-                  <mesh filename="package://scout_description/meshes/scout_v2_chassis.dae" />
-               </geometry>
-            </visual>
-         </xacro:if>
-         <!-- <visual>
-            <origin
-               xyz="${aabb_center_x-body_reference_x} ${aabb_center_y}  ${aabb_center_z-chassis_height}"
-               rpy="0 0 0" />
-            <geometry>
-               <box size="${aabb_length} ${aabb_width} ${aabb_height}" />
-            </geometry>
-         </visual> -->
-         <!-- visual front wheel -->
-         <cylinder length="${front_wheel_width}" radius="${front_wheel_radius}" />
-         <!-- visual rear wheel -->
-         <cylinder length="${rear_wheel_width}" radius="${rear_wheel_radius}" />
+         <xacro:chassis_visual />
+         <xacro:front_left_wheel_visual />
+         <xacro:front_right_wheel_visual />
+         <xacro:rear_left_wheel_visual />
+         <xacro:rear_right_wheel_visual />
       </xacro:chassis>
 
    </xacro:macro>
