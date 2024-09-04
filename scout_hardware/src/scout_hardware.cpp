@@ -18,7 +18,7 @@
 #include "rclcpp/rclcpp.hpp"
 
 // romea
-#include "romea_mobile_base_hardware/hardware_info.hpp"
+#include "romea_mobile_base_utils/ros2_control/info/hardware_info_common.hpp"
 
 // local
 #include "scout_hardware/scout_hardware.hpp"
@@ -97,13 +97,17 @@ hardware_interface::return_type ScoutHardwareBase::load_info_(
   try {
     // Get some info from ros2_control item of robot urdf file
     // wheelbase_ = get_parameter<double>(hardware_info, "wheelbase");
-    auto front_track_ = get_parameter<double>(hardware_info, "front_track");
-    auto rear_track_ = get_parameter<double>(hardware_info, "front_track");
+    // auto front_track_ = get_parameter<double>(hardware_info, "front_track");
+    // auto rear_track_ = get_parameter<double>(hardware_info, "rear_track");
+    auto front_track_ = get_front_track(hardware_info);
+    auto rear_track_ = get_rear_track(hardware_info);
     assert(front_track_ == rear_track_);
     track_ = front_track_;
 
-    auto front_wheel_radius_ = get_parameter<float>(hardware_info, "front_wheel_radius");
-    auto rear_wheel_radius_ = get_parameter<float>(hardware_info, "rear_wheel_radius");
+    // auto front_wheel_radius_ = get_parameter<float>(hardware_info, "front_wheel_radius");
+    // auto rear_wheel_radius_ = get_parameter<float>(hardware_info, "rear_wheel_radius");
+    auto front_wheel_radius_ = get_front_wheel_radius(hardware_info);
+    auto rear_wheel_radius_ = get_rear_wheel_radius(hardware_info);
     assert(front_wheel_radius_ == rear_wheel_radius_);
     wheel_radius_ = front_wheel_radius_;
 
@@ -193,13 +197,13 @@ void ScoutHardwareBase::set_hardware_state_()
   state.frontRightWheelSpinningMotion.velocity = front_right_wheel_angular_speed_measure_;
   state.rearLeftWheelSpinningMotion.velocity = rear_left_wheel_angular_speed_measure_;
   state.rearRightWheelSpinningMotion.velocity = rear_right_wheel_angular_speed_measure_;
-  this->hardware_interface_->set_state(state);
+  this->hardware_interface_->set_feedback(state);
 }
 
 //-----------------------------------------------------------------------------
 void ScoutHardwareBase::get_hardware_command_()
 {
-  core::HardwareCommand4WD command = hardware_interface_->get_command();
+  core::HardwareCommand4WD command = hardware_interface_->get_hardware_command();
   front_left_wheel_angular_speed_command_ = command.frontLeftWheelSpinningSetPoint;
   front_right_wheel_angular_speed_command_ = command.frontRightWheelSpinningSetPoint;
   rear_left_wheel_angular_speed_command_ = command.rearLeftWheelSpinningSetPoint;
