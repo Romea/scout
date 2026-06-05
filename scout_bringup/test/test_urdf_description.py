@@ -12,30 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import subprocess
+import xml.etree.ElementTree as ET
 
 from ament_index_python import get_package_prefix
 from ament_index_python.packages import get_package_share_directory
 
-import xml.etree.ElementTree as ET
+
+def run_script(script, *args):
+    exe = get_package_prefix("scout_bringup") + "/lib/scout_bringup/" + script
+    return ET.fromstring(subprocess.check_output([exe, *args], encoding="utf-8"))
 
 
 def urdf_xml(mode, robot_model):
-
-    exe = get_package_prefix("scout_bringup") + "/lib/scout_bringup/urdf_description.py"
-
-    return ET.fromstring(
-        subprocess.check_output(
-            [exe, "mode:" + mode, "base_name:base", "robot_model:"+robot_model, "robot_namespace:robot"],
-            encoding="utf-8",
-        )
+    return run_script(
+        "generate_urdf_description.py",
+        "mode:" + mode,
+        "base_name:base",
+        "robot_model:" + robot_model,
+        "robot_namespace:robot",
     )
 
 
-def ros2_control_urdf_xml(mode, robot_model):
-    urdf_xml(mode, robot_model)
-    return ET.parse("/tmp/robot_base_ros2_control.urdf")
+def ros2_control_xml(mode, robot_model):
+    return run_script(
+        "generate_ros2_control_description.py",
+        "mode:" + mode,
+        "base_name:base",
+        "robot_model:" + robot_model,
+        "robot_namespace:robot",
+    )
 
 
 def test_footprint_link_name():
@@ -43,27 +49,29 @@ def test_footprint_link_name():
 
 
 def test_hardware_plugin_name():
+    assert (
+        ros2_control_xml("live", "mini").find("ros2_control/hardware/plugin").text
+        == "scout_hardware/ScoutMiniHardware"
+    )
 
-    assert ros2_control_urdf_xml("live", "mini").find(
-        "ros2_control/hardware/plugin"
-    ).text == "scout_hardware/ScoutMiniHardware"
+    assert (
+        ros2_control_xml("live", "v2").find("ros2_control/hardware/plugin").text
+        == "scout_hardware/ScoutV2Hardware"
+    )
 
-    assert ros2_control_urdf_xml("live", "v2").find(
-        "ros2_control/hardware/plugin"
-    ).text == "scout_hardware/ScoutV2Hardware"
+    assert (
+        ros2_control_xml("simulation_gazebo_classic", "mini").find("ros2_control/hardware/plugin").text
+        == "romea_mobile_base_gazebo/GazeboSystemInterface4WD"
+    )
 
-    assert ros2_control_urdf_xml("simulation", "mini").find(
-        "ros2_control/hardware/plugin"
-    ).text == "romea_mobile_base_gazebo/GazeboSystemInterface4WD"
-
-    assert ros2_control_urdf_xml("simulation", "v2").find(
-        "ros2_control/hardware/plugin"
-    ).text == "romea_mobile_base_gazebo/GazeboSystemInterface4WD"
+    assert (
+        ros2_control_xml("simulation_gazebo_classic", "v2").find("ros2_control/hardware/plugin").text
+        == "romea_mobile_base_gazebo/GazeboSystemInterface4WD"
+    )
 
 
 def test_controller_filename_name():
-
     assert (
-        urdf_xml("simulation", "mini").find("gazebo/plugin/controller_manager_config_file").text
+        urdf_xml("simulation_gazebo_classic", "mini").find("gazebo/plugin/parameters").text
         == get_package_share_directory("scout_bringup") + "/config/controller_manager.yaml"
     )

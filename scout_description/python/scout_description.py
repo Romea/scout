@@ -12,32 +12,80 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import xacro
-
 from ament_index_python.packages import get_package_share_directory
 
+import romea_common_description
+from romea_mobile_base_description import (
+    get_complete_configuration,
+    get_specification_units,
+)
 
-def urdf(prefix, mode, base_name, model, controller_manager_config_yaml_file, ros_prefix):
+import xacro
+import yaml
+
+
+def get_specifications_path_file(robot_model):
+    return (
+        get_package_share_directory("scout_description")
+        + "/config/scout_"
+        + robot_model
+        + ".yaml"
+    )
+
+
+def get_specifications_configuration(robot_model):
+    with open(get_specifications_path_file(robot_model), "r") as f:
+        return yaml.safe_load(f)
+
+
+def get_configuration(robot_model):
+    specifications = get_specifications_configuration(robot_model)
+    configuration = get_complete_configuration(specifications)
+    configuration["model"] = "scout"
+    configuration["version"] = robot_model
+    configuration["manufacturer"] = "agilex"
+    return configuration
+
+
+def generate_configuration_file(configuration, extended):
+    units = get_specification_units()
+    return romea_common_description.generate_configuration_file(configuration, units, extended)
+
+
+def generate_ros2_control_description(prefix, mode, base_name, robot_model):
+    if mode == "simulation":
+        mode += "_gazebo_classic"
 
     ros2_control_xacro_file = (
         get_package_share_directory("scout_description")
         + "/ros2_control/scout_"
-        + model
+        + robot_model
         + ".ros2_control.urdf.xacro"
     )
 
     ros2_control_urdf_xml = xacro.process_file(
-        ros2_control_xacro_file, mappings={"prefix": prefix, "mode": mode, "base_name": base_name}
+        ros2_control_xacro_file,
+        mappings={
+            "prefix": prefix,
+            "mode": mode,
+            "base_name": base_name,
+        },
     )
 
-    ros2_control_config_urdf_file = "/tmp/" + prefix + base_name + "_ros2_control.urdf"
+    return ros2_control_urdf_xml.toprettyxml(indent="  ")
 
-    with open(ros2_control_config_urdf_file, "w") as f:
-        f.write(ros2_control_urdf_xml.toprettyxml())
+
+def generate_urdf_description(
+    prefix, mode, base_name, robot_model, controller_manager_config_yaml_file, ros_prefix
+):
+    if mode == "simulation":
+        mode += "_gazebo_classic"
 
     xacro_file = (
-        get_package_share_directory("scout_description") + "/urdf/scout_" + model + ".urdf.xacro"
+        get_package_share_directory("scout_description")
+        + "/urdf/scout_"
+        + robot_model
+        + ".urdf.xacro"
     )
 
     urdf_xml = xacro.process_file(
@@ -47,9 +95,14 @@ def urdf(prefix, mode, base_name, model, controller_manager_config_yaml_file, ro
             "mode": mode,
             "base_name": base_name,
             "controller_manager_config_yaml_file": controller_manager_config_yaml_file,
-            "ros2_control_config_urdf_file": ros2_control_config_urdf_file,
             "ros_prefix": ros_prefix,
         },
     )
 
-    return urdf_xml.toprettyxml()
+    return urdf_xml.toprettyxml(indent="  ")
+
+
+def urdf(prefix, mode, base_name, model, controller_manager_config_yaml_file, ros_prefix):
+    return generate_urdf_description(
+        prefix, mode, base_name, model, controller_manager_config_yaml_file, ros_prefix
+    )

@@ -8,7 +8,8 @@
                     xyz="${aabb_center_x-body_reference_x+0.02} ${aabb_center_y-0.015}  ${aabb_center_z-chassis_height-0.08}"
                     rpy="0 0 ${-M_PI/2.}" />
                 <geometry>
-                    <mesh filename="package://scout_description/meshes/scout_mini_chassis.STL" />
+                    <!-- <mesh filename="package://scout_description/meshes/scout_mini_chassis.STL" /> -->
+                    <mesh filename="file://$(find scout_description)/meshes/scout_mini_chassis.STL" />
                 </geometry>
             </visual>
         </xacro:if>
@@ -18,7 +19,8 @@
                     xyz="${aabb_center_x-body_reference_x} ${aabb_center_y}  ${aabb_center_z-chassis_height}"
                     rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://scout_description/meshes/scout_v2_chassis.dae" />
+                    <!-- <mesh filename="package://scout_description/meshes/scout_v2_chassis.dae" /> -->
+                    <mesh filename="file://$(find scout_description)/meshes/scout_v2_chassis.dae" />
                 </geometry>
             </visual>
         </xacro:if>
