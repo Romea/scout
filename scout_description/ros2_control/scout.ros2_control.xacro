@@ -43,19 +43,38 @@
     <xacro:property name="maximal_wheel_speed"
       value="${props['wheels_speed_control']['command']['maximal_speed']}" />
 
-    <!-- hardware plugins -->
-    <xacro:property name="simulation_hardware_plugin"
-      value="romea_mobile_base_gazebo/GazeboSystemInterface4WD" />
-    <xacro:if value="${model == 'mini'}">
-      <xacro:property name="live_hardware_plugin"
-        value="scout_hardware/ScoutMiniHardware" />
-    </xacro:if>
-    <xacro:if value="${model == 'v2'}">
-      <xacro:property name="live_hardware_plugin"
-        value="scout_hardware/ScoutV2Hardware" />
+    <xacro:if value="${mode == 'simulation_gazebo'}">
+      <xacro:property
+        name="hardware_plugin"
+        value="romea_mobile_base_gazebo/GazeboSystemInterface" />
     </xacro:if>
 
-    <xacro:base_control mode="${mode}" base_name="${base_name}" />
+    <xacro:if value="${mode == 'simulation_gazebo_classic'}">
+        <xacro:property name="hardware_plugin"
+          value="campero_hardware/GazeboSystemInterface4WD" />
+    </xacro:if>
+
+    <xacro:if value="${'4dv' in mode or 'isaac' in mode}">
+      <xacro:property
+        name="hardware_plugin"
+        value="romea_mobile_base_simulation/GenericSimulationSystemInterface" />
+    </xacro:if>
+
+    <xacro:if value="${mode ==  'live'}">
+      <xacro:if value="${model == 'mini'}">
+        <xacro:property name="hardware_plugin"
+          value="scout_hardware/ScoutMiniHardware" />
+      </xacro:if>
+      <xacro:if value="${model == 'v2'}">
+        <xacro:property name="hardware_plugin"
+          value="scout_hardware/ScoutV2Hardware" />
+      </xacro:if>
+    </xacro:if>
+
+    <xacro:base_control
+      mode="${mode}"
+      base_name="${base_name}"
+      hardware_plugin="${hardware_plugin}" />
 
   </xacro:macro>
 
