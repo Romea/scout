@@ -36,7 +36,7 @@ namespace ros2 {
 //-----------------------------------------------------------------------------
 ScoutHardwareBase::ScoutHardwareBase(ProtocolVersion protocol,
                                      bool is_mini_model)
-    : HardwareSystemInterface<HardwareInterface4WD>(),
+    : HardwareSystemInterface4WD(),
       robot_(protocol, is_mini_model),
       wheel_radius_(0),
       track_(0),

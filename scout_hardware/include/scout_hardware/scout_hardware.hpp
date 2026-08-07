@@ -31,7 +31,7 @@ namespace romea
 namespace ros2
 {
 
-class ScoutHardwareBase : public HardwareSystemInterface<HardwareInterface4WD>
+class ScoutHardwareBase : public HardwareSystemInterface4WD
 {
 public:
   RCLCPP_SHARED_PTR_DEFINITIONS(ScoutHardwareBase);

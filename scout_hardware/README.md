@@ -10,8 +10,8 @@ The exported plugins are:
 
 | Plugin | Base class | Mobile base architecture | Model |
 |---|---|---|---|
-| `scout_hardware/ScoutMiniHardware` | `HardwareSystemInterface<HardwareInterface4WD>` | `4WD` | Scout Mini |
-| `scout_hardware/ScoutV2Hardware` | `HardwareSystemInterface<HardwareInterface4WD>` | `4WD` | Scout V2 |
+| `scout_hardware/ScoutMiniHardware` | `HardwareSystemInterface4WD` | `4WD` | Scout Mini |
+| `scout_hardware/ScoutV2Hardware` | `HardwareSystemInterface4WD` | `4WD` | Scout V2 |
 
 ## 2) Hardware concept
 
