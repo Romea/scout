@@ -51,7 +51,7 @@
 
     <xacro:if value="${mode == 'simulation_gazebo_classic'}">
         <xacro:property name="hardware_plugin"
-          value="campero_hardware/GazeboSystemInterface4WD" />
+          value="romea_mobile_base_gazebo/GazeboSystemInterface4WD" />
     </xacro:if>
 
     <xacro:if value="${'4dv' in mode or 'isaac' in mode}">
