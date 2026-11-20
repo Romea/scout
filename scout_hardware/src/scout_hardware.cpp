@@ -113,12 +113,8 @@ hardware_interface::return_type ScoutHardwareBase::load_info_(
 void ScoutHardwareBase::send_null_command_() { robot_.SetMotionCommand(0, 0); }
 
 //-----------------------------------------------------------------------------
-#if ROS_DISTRO == ROS_GALACTIC
-hardware_interface::return_type ScoutHardwareBase::read()
-#else
 hardware_interface::return_type ScoutHardwareBase::read(
     const rclcpp::Time& /*time*/, const rclcpp::Duration& /*period*/)
-#endif
 {
   try {
     set_hardware_state_();
@@ -152,12 +148,8 @@ hardware_interface::return_type ScoutHardwareBase::read(
 }
 
 //-----------------------------------------------------------------------------
-#if ROS_DISTRO == ROS_GALACTIC
-hardware_interface::return_type ScoutHardwareBase::write()
-#else
 hardware_interface::return_type ScoutHardwareBase::write(
     const rclcpp::Time& /*time*/, const rclcpp::Duration& /*period*/)
-#endif
 {
   // RCLCPP_ERROR(rclcpp::get_logger("ScoutHardware"), "Send command to robot");
   get_hardware_command_();
